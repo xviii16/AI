@@ -1,0 +1,71 @@
+def selection_sort(arr):
+    n = len(arr)
+    for i in range(n - 1):
+        min_index = i
+        for j in range(i + 1, n):
+            if arr[j] < arr[min_index]:
+                min_index = j
+        arr[i], arr[min_index] = arr[min_index], arr[i]
+    return arr
+
+input_array = []
+total = int(input("Enter the total no. of elements: "))
+for k in range(total):
+    num = int(input("Enter Number {}: ".format(k + 1)))
+    input_array.append(num)
+
+sorted_array = selection_sort(input_array)
+print("Sorted Array:", sorted_array)
+
+
+#prims
+
+import sys
+
+class Graph:
+    def __init__(self, vertices):
+        self.V = vertices
+        self.graph = [[0 for column in range(vertices)]
+                      for row in range(vertices)]
+
+    def printMST(self, parent):
+        print("Edge \tWeight")
+        for i in range(1, self.V):
+            print(f"{parent[i]} - {i} \t {self.graph[i][parent[i]]}")
+
+    def minKey(self, key, mstSet):
+        min_value = sys.maxsize
+        min_index = -1
+        for v in range(self.V):
+            if key[v] < min_value and not mstSet[v]:
+                min_value = key[v]
+                min_index = v
+        return min_index
+
+    def primMST(self):
+        key = [sys.maxsize] * self.V
+        parent = [None] * self.V
+        key[0] = 0
+        mstSet = [False] * self.V
+        parent[0] = -1
+        
+        for _ in range(self.V):
+            u = self.minKey(key, mstSet)
+            mstSet[u] = True
+            
+            for v in range(self.V):
+                if self.graph[u][v] > 0 and not mstSet[v] and key[v] > self.graph[u][v]:
+                    key[v] = self.graph[u][v]
+                    parent[v] = u
+
+        self.printMST(parent)
+
+
+g = Graph(5)
+
+g.graph = [[0, 1, 4, 0, 0],
+           [2, 0, 3, 8, 5],
+           [7, 3, 4, 0, 0],
+           [6, 8, 0, 0, 9],
+           [0, 5, 7, 0, 0]]
+g.primMST()
